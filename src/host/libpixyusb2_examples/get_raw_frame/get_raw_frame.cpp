@@ -65,16 +65,20 @@ int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, uint32_
       pixel = pixel0 + xx;
       printf ("D1_4\n");
       if (yy&1)
-      {
+      { 
         if (xx&1)
         {
+          printf ("D2_xyz\n");
           r = *pixel;
+          printf ("D2_1\n");
           g = (*(pixel-1)+*(pixel+1)+*(pixel+width)+*(pixel-width))>>2;
+          printf ("D2_2\n");
           b = (*(pixel-width-1)+*(pixel-width+1)+*(pixel+width-1)+*(pixel+width+1))>>2;
           printf ("D2\n");
         }
         else
         {
+          printf ("D3_0\n");
           r = (*(pixel-1)+*(pixel+1))>>1;
           g = *pixel;
           b = (*(pixel-width)+*(pixel+width))>>1;
@@ -85,6 +89,7 @@ int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, uint32_
       {
         if (xx&1)
         {
+          printf ("D4_0\n");
           r = (*(pixel-width)+*(pixel+width))>>1;
           g = *pixel;
           b = (*(pixel-1)+*(pixel+1))>>1;
@@ -92,12 +97,14 @@ int demosaic(uint16_t width, uint16_t height, const uint8_t *bayerImage, uint32_
         }
         else
         {
+          printf ("D5_0\n");
           r = (*(pixel-width-1)+*(pixel-width+1)+*(pixel+width-1)+*(pixel+width+1))>>2;
           g = (*(pixel-1)+*(pixel+1)+*(pixel+width)+*(pixel-width))>>2;
           b = *pixel;
           printf ("D5\n");
         }
       }
+      printf ("D6_0\n");
       *image = (b<<16) | (g<<8) | r; 
       printf ("D6\n");
     }
@@ -152,6 +159,8 @@ int main()
   pixy.m_link.getRawFrame(&bayerFrame);
   printf ("E2\n");
   // convert Bayer frame to RGB frame
+  printf("%d %d\n", PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT);
+  printf("%s\n", bayerFrame);
   demosaic(PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT, bayerFrame, rgbFrame);
   printf ("E3\n");
   // write frame to PPM file for verification
