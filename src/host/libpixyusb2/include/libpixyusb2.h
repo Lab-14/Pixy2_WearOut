@@ -28,8 +28,8 @@
 #include "util.h"
 #include "TPixy2.h"
 
-#define PIXY2_RAW_FRAME_WIDTH   316
-#define PIXY2_RAW_FRAME_HEIGHT  208
+#define PIXY2_RAW_FRAME_WIDTH   632
+#define PIXY2_RAW_FRAME_HEIGHT  416
 
 class Link2USB
 {

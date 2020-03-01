@@ -160,16 +160,27 @@ int main()
   printf ("E2\n");
   // convert Bayer frame to RGB frame
   printf("%d %d\n", PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT);
-  printf("%s\n", bayerFrame);
-  demosaic(PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT, bayerFrame, rgbFrame);
-  printf ("E3\n");
-  // write frame to PPM file for verification
-  Result = writePPM(PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT, rgbFrame, "out");
-  printf ("E4\n");
-  if (Result==0)
-    printf("Write frame to out.ppm\n");
+  // printf("%s\n", bayerFrame);
+
+  printf ("E2_Locked\n");
+
+  FILE *fp;
+  fp = fopen("test.txt", "w");
+  // fprintf(fp, "This is testing...\n");
+  fprintf(fp, "%s", bayerFrame);
+  fclose(fp);
+
+  printf ("E2_Dumped\n");
+
+  // demosaic(PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT, bayerFrame, rgbFrame);
+  // printf ("E3\n");
+  // // write frame to PPM file for verification
+  // Result = writePPM(PIXY2_RAW_FRAME_WIDTH, PIXY2_RAW_FRAME_HEIGHT, rgbFrame, "out");
+  // printf ("E4\n");
+  // if (Result==0)
+  //   printf("Write frame to out.ppm\n");
   
-  // Call resume() to resume the current program, otherwise Pixy will be left
-  // in "paused" state.  
-  pixy.m_link.resume();
+  // // Call resume() to resume the current program, otherwise Pixy will be left
+  // // in "paused" state.  
+  // pixy.m_link.resume();
 }
