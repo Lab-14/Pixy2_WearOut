@@ -42,11 +42,13 @@
 #define ECHO_TEST_CTS  (UART_PIN_NO_CHANGE)
 
 #define BUF_SIZE (1024)
+static const char *TAG = "MQTT_EXAMPLE";
 
 static void echo_task(void *arg)
 {
+    // Manoj EDITED // Configuration can be moved to a different static function later on
     /* Configure parameters of an UART driver,
-     * communication pins and install the driver */
+     * communication pins and install the driver */ 
     uart_config_t uart_config = {
         .baud_rate = 115200,
         .data_bits = UART_DATA_8_BITS,
@@ -67,11 +69,9 @@ static void echo_task(void *arg)
         int len = uart_read_bytes(UART_NUM_1, data, BUF_SIZE, 20 / portTICK_RATE_MS);
         // Write data back to the UART
         uart_write_bytes(UART_NUM_1, (const char *) data, len);
+        ESP_LOGI(TAG, "Test_Omkar");
     }
 }
-
-static const char *TAG = "MQTT_EXAMPLE";
-
 
 static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event)
 {
@@ -189,4 +189,7 @@ void app_main(void)
     ESP_ERROR_CHECK(example_connect());
 
     mqtt_app_start();
+
+    // Addtional task added to perform UART->MQTT publish cycle
+    // xTaskCreate(echo_task, "uart_echo_task", 1024, NULL, 10, NULL);
 }
