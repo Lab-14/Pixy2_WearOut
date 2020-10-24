@@ -32,7 +32,7 @@ void setup()
 {
  // Note the format for setting a serial port is as follows: Serial2.begin(baud-rate, protocol, RX pin, TX pin);
   Serial.begin(115200);
-  Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
+  Serial2.begin(921600, SERIAL_8N1, RXD2, TXD2);
   
   Serial.println("Serial Txd is on pin: "+String(TX));
   Serial.println("Serial Rxd is on pin: "+String(RX));
@@ -42,7 +42,7 @@ void setup()
 
   setup_wifi();
   client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
+//  client.setCallback(callback);
 
   pinMode(ledPin, OUTPUT);
 }
@@ -105,8 +105,8 @@ void reconnect() {
     // Attempt to connect
     if (client.connect("ESP8266Client")) {
       Serial.println("connected");
-      // Subscribe
-      client.subscribe("esp32/output");
+      // Subscribe commented by Manoj
+      // client.subscribe("esp32/output");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -117,51 +117,52 @@ void reconnect() {
   }
 }
 
-char inData[20]; // Allocate some space for the string
+int var1 = 4900;
+int var2 = 9216;
+int var3 = 25600;
+int var4 = 50176;
+int var5 = 129600;
+int var6 = 193600;
+int var7 = 262144;
+int var8 = 360000;
+int var9 = 480000;
+int var10 = 560000;
+int var11 = 640000;
+int var12 = 720000;
+int var13 = 810000;
+int var14 = 880000;
+int var15 = 960000;
+
+
+char inData[60000]; // Allocate some space for the string
 char inChar=-1; // Where to store the character read
 byte ind = 0; // Index into array; where to store the character
+byte test_flag = 0;// Raise test flag whenever serial data is received
 
 void loop() {
   if (!client.connected()) 
   {
     reconnect();
   }
-  client.loop();
-
-  // long now = millis();
-  // if (now - lastMsg > 5000) 
-  // lastMsg = now;
-  
+  client.loop(); 
   ind = 0;
-  
+
+  test_flag = 0;
   while (Serial2.available()) 
   {
-//    Serial.print(char(Serial2.read()));
-    
-//    if(ind < 19) // One less than the size of the array
-//        {
-//            inChar = Serial2.read(); // Read a character
-//            inData[ind] = inChar; // Store it
-//            ind++; // Increment where to write next
-//            inData[ind] = '\0'; // Null terminate the string
-//        }
-    if(ind < 19) // One less than the size of the array
+
+    if(ind < 60000) // One less than the size of the array
         {
             inChar = Serial2.read(); // Read a character
             inData[ind] = inChar; // Store it
             ind++; // Increment where to write next
             inData[ind] = '\0'; // Null terminate the string
         }
-        
-    // // Temperature in Celsius
-    // temperature = 98;
-
-    
-    // // Convert the value to a char array
-    //     char tempString[16]=Serial2.read();
-    // dtostrf(temperature, 1, 2, tempString);
-    // Serial.print("Temperature: ");
-    // Serial.println(tempString);
+    test_flag = 1;  
+  }      
+  if(test_flag == 1)
+  {
     client.publish("esp32/temperature", inData );
   }
+ 
 }
